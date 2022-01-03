@@ -10,14 +10,18 @@
     "@types/node": "^16.7.13",
     "@types/react": "^17.0.20",
     "@types/react-dom": "^17.0.9",
+    "axios": "^0.24.0",
+    "node-sass": "^7.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-router-dom": "6",
     "react-scripts": "5.0.0",
+    "recoil": "^0.5.2",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "HTTPS=true HOST=dev.goodsungjin.com react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -25,8 +29,66 @@
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
-    ]
+      "airbnb",
+      "react-app/jest",
+      "prettier"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.ts",
+          "*.tsx"
+        ],
+        "rules": {
+          "no-unused-vars": "off"
+        }
+      }
+    ],
+    "ignorePatterns": [
+      "src/service/api/java",
+      "src/components-nonatomic"
+    ],
+    "rules": {
+      "react/prefer-stateless-function": 0,
+      "react/jsx-filename-extension": 0,
+      "react/jsx-one-expression-per-line": 0,
+      "no-use-before-define": "off",
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": "error",
+      "@typescript-eslint/no-use-before-define": [
+        "error"
+      ],
+      "import/extensions": "off",
+      "import/no-unresolved": "off",
+      "import/prefer-default-export": "off",
+      "global-require": "off",
+      "react/no-unused-prop-types": "off",
+      "react/require-default-props": "off",
+      "react/jsx-props-no-spreading": "off",
+      "consistent-return": "off",
+      "camelcase": [
+        "off",
+        {
+          "properties": "never"
+        }
+      ],
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          "devDependencies": [
+            ".storybook/**",
+            "stories/**",
+            "**/**.stories.tsx"
+          ]
+        }
+      ],
+      "no-param-reassign": [
+        "warn"
+      ]
+    },
+    "env": {
+      "browser": true
+    }
   },
   "browserslist": {
     "production": [
@@ -39,5 +101,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.1"
   }
 }
