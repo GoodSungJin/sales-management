@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useRoutes } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRoutes } from 'react-router-dom';
 
 import './App.scss';
-import {
-  fetchCreateFile,
-  fetchReadCell,
-  fetchWriteCell,
-} from './api/spreadSheet';
 
-import { fetchGetFilesFilterSpread } from './api/googleDrive';
-import { spreadsheetsState } from './recoil';
 import { routes } from './Router';
+import { handleClientLoad } from './utils/googleOAuth';
+import TemplateGlobalNavigationBar from './components/templates/GlobalNavigationBar';
 
 function App() {
   const router = useRoutes(routes);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  return <div>{router}</div>;
+  useEffect(() => {
+    handleClientLoad((isAuth) => {
+      setIsAuthenticated(isAuth);
+    });
+  }, []);
+
+  return (
+    <>
+      {isAuthenticated ? router : 'loaded'}
+
+      <TemplateGlobalNavigationBar />
+    </>
+  );
 }
 
 export default App;

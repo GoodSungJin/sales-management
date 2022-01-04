@@ -1,0 +1,24 @@
+.daily-sales {
+  max-height: 700px;
+  width: 100%;
+  height: 100%;
+
+  &__list {
+    &__item {
+      display: flex;
+      flex-direction: column;
+
+      &__label {
+        &__input-product-name {
+          width: 150px;
+        }
+        &__input-quantity {
+          width: 30px;
+        }
+        &__input-price {
+          width: 50px;
+        }
+      }
+    }
+  }
+}

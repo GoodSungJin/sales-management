@@ -1,0 +1,9 @@
+.sheet-list {
+  padding: 8px;
+
+  &__item {
+    & + & {
+      margin-top: 15px;
+    }
+  }
+}

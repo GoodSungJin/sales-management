@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchReadCell } from '../../api/spreadSheet';
+import TemplateCalendar from '../templates/Calendar';
 
 function PageDetail() {
   const { id: spreadsheetID } = useParams<'id'>();
 
   const [currSpreadsheet, setCurrSpreadsheet] = useState<Row[]>([]);
-  const [formatedSales, setFormatedSales] = useState<DailySale[]>();
+  const [formattedSales, setFormattedSales] = useState<DailySale[]>();
 
   useEffect(() => {
     init();
   }, [spreadsheetID]);
 
   useEffect(() => {
-    setFormatedSales(buildDailySales(currSpreadsheet));
+    setFormattedSales(
+      buildDailySales(currSpreadsheet).filter((_, idx) => idx !== 0)
+    );
+    // setFormattedSales(buildDailySales(currSpreadsheet));
+
+    console.log(buildDailySales(currSpreadsheet).filter((_, idx) => idx !== 0));
   }, [currSpreadsheet]);
 
   const init = async () => {
@@ -23,7 +29,7 @@ function PageDetail() {
   };
 
   const buildDailySales = (values: Row[]) =>
-    values.reduce((accu, curr) => {
+    values.reduce((accu, curr, currIdx) => {
       const [userName, store, date, productName, quantity, price, totalPrice] =
         curr;
       if (!userName) return accu;
@@ -59,6 +65,7 @@ function PageDetail() {
   return (
     <div>
       <h1>DETIAL</h1>
+      <TemplateCalendar />
       {currSpreadsheet.map((item) => (
         <div>{JSON.stringify(item)}</div>
       ))}
