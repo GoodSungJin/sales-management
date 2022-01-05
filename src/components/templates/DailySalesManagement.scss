@@ -3,22 +3,49 @@
   width: 100%;
   height: 100%;
 
-  &__list {
-    &__item {
-      display: flex;
-      flex-direction: column;
+  position: relative;
 
-      &__label {
-        &__input-product-name {
-          width: 150px;
-        }
-        &__input-quantity {
-          width: 30px;
-        }
-        &__input-price {
-          width: 50px;
-        }
-      }
+  &__store-name {
+    margin-bottom: 35px;
+  }
+
+  &__list {
+    width: 100%;
+  }
+
+  &__add {
+    width: 100%;
+    height: 50px;
+
+    padding: 10px;
+
+    margin-top: 16px;
+
+    background-color: #fff;
+    opacity: 0.5;
+
+    & > div {
+      width: 100%;
+      height: 100%;
     }
+  }
+
+  &__complete {
+    width: 100%;
+    height: 60px;
+
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+    margin-top: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+    background-color: moccasin;
+    box-shadow: black 0px 0px 18px -8px;
   }
 }

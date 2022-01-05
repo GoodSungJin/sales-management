@@ -1,0 +1,28 @@
+.detail-section {
+  width: 100%;
+  height: 100vh;
+
+  padding-top: 80px;
+
+  display: flex;
+  justify-content: center;
+
+  &__calendar {
+    height: fit-content;
+    width: fit-content;
+
+    background-color: lightblue;
+    border-radius: 12px;
+
+    &__title {
+      padding: 28px 0;
+
+      display: flex;
+      justify-content: center;
+
+      &__text {
+        font-size: 32px;
+      }
+    }
+  }
+}

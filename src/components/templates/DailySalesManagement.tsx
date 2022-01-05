@@ -1,71 +1,177 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { IoAddOutline } from 'react-icons/io5';
+import { useRecoilState } from 'recoil';
+import { useParams } from 'react-router-dom';
+import _ from 'lodash';
 
 import './DailySalesManagement.scss';
 
-function TemplateDailySalesManagement() {
-  const [productName, setProductName] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState(1);
+import MoleculeDailySalesInputLabel from '../molecules/DailySalesInputLabel';
+import { monthlySalesData } from '../../recoil';
+import { DailySale, Product } from '../../recoil/type';
+import { fetchSetSheet } from '../../api/spreadSheet';
+import { buildRowsBySales, Row, Rows } from '../../utils';
+import SalesListItem from '../organisms/SalesListItem';
 
-  const handleChangeQuantity = ({
-    target: { value },
-  }: ChangeEvent<HTMLInputElement>) => {
-    setQuantity(+value);
+const INITIAL_STATE: DailySale = {
+  date: '',
+  store: '',
+  products: [],
+  userName: '신금희',
+};
+function TemplateDailySalesManagement({ currDate }: Props) {
+  const { id: sheetID } = useParams<'id'>();
+
+  const [sales, setSales] = useRecoilState(monthlySalesData);
+  const [currSales, setCurrSales] = useState(INITIAL_STATE);
+
+  useEffect(() => {
+    const includedSales = sales.find((item) => item.date === currDate);
+
+    setCurrSales(
+      includedSales || {
+        ...INITIAL_STATE,
+        date: currDate,
+      }
+    );
+  }, [currDate, sales]);
+
+  const onChangeInput = (
+    { target: { value, name } }: ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
+    const updateProducts = (products: any[]) =>
+      products.map((item) => {
+        if (item.id === id)
+          return {
+            ...item,
+            [name]: value,
+          };
+
+        return item;
+      });
+
+    setCurrSales((prev) => ({
+      ...prev,
+      products: updateProducts(prev.products),
+    }));
   };
 
-  const handleChangePrice = ({
-    target: { value },
-  }: ChangeEvent<HTMLInputElement>) => {
-    setPrice(+value);
+  const onClickDelete = (id: number) => {
+    const filteredProduct = currSales.products.filter((item) => item.id !== id);
+
+    setCurrSales((prev) => ({ ...prev, products: filteredProduct }));
   };
 
-  const handleChangeProductName = ({
+  const onClickAdd = () => {
+    const buildID = (products: Product[]) =>
+      Math.max(...products.map((item) => item.id)) + 1;
+    const id = currSales.products.length ? buildID(currSales.products) : 1;
+    const initState = {
+      id,
+      name: '',
+      quantity: 1,
+      price: 1,
+    };
+
+    setCurrSales((prev) => ({
+      ...prev,
+      products: [...prev.products, initState],
+    }));
+  };
+
+  const onChangeStoreName = ({
     target: { value },
   }: ChangeEvent<HTMLInputElement>) => {
-    setProductName(value);
+    setCurrSales((prev) => ({ ...prev, store: value }));
+  };
+
+  const onClickSetSales = async () => {
+    setSales((prev) => {
+      const isIncluded =
+        prev.findIndex((item) => item.date === currSales.date) !== -1;
+      const monthlySales = isIncluded
+        ? prev.map((item) => {
+            if (item.date === currSales.date) return currSales;
+            return item;
+          })
+        : [...prev, currSales];
+
+      handleSubmitSheet(monthlySales);
+
+      return monthlySales;
+    });
+  };
+
+  const handleSubmitSheet = (monthlySales: DailySale[]) => {
+    const sortedMonthlySales = _.sortBy(monthlySales, (o) =>
+      new Date(o.date).getTime()
+    );
+    const payload = sortedMonthlySales.reduce((accu, dailySales) => {
+      const productRows: Rows = buildRowsBySales(dailySales);
+      const totalPrice = dailySales.products.reduce(
+        (priceAccu, { price, quantity }) => priceAccu + price * quantity,
+        0
+      );
+      const totalPriceRow: Row = [
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        totalPrice.toString(),
+      ];
+
+      return [...accu, ...productRows, totalPriceRow];
+    }, [] as Rows);
+
+    fetchSetSheet(sheetID || '', payload);
   };
 
   return (
     <section className="daily-sales">
+      <div className="daily-sales__store-name">
+        <MoleculeDailySalesInputLabel
+          onChange={onChangeStoreName}
+          type="text"
+          value={currSales.store}
+          placeholder="매장명을 입력해주세요."
+          name="name"
+        >
+          매장명
+        </MoleculeDailySalesInputLabel>
+      </div>
       <ul className="daily-sales__list">
-        <li className="daily-sales__list__item">
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label className="daily-sales__list__item__label">
-            제품명
-            <input
-              type="text"
-              placeholder="제품명을 입력해주세요."
-              value={productName}
-              onChange={handleChangeProductName}
-              className="daily-sales__list__item__label__input-product-name"
-            />
-          </label>
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label className="daily-sales__list__item__label">
-            수량
-            <input
-              type="number"
-              value={quantity}
-              onChange={handleChangeQuantity}
-              className="daily-sales__list__item__label__input-quantity"
-            />
-          </label>
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label className="daily-sales__list__item__label">
-            가격
-            <input
-              type="number"
-              value={price}
-              onChange={handleChangePrice}
-              className="daily-sales__list__item__label__input-price"
-            />
-          </label>
-        </li>
+        {currSales.products.map(({ id, name, quantity, price }) => (
+          <SalesListItem
+            onChangeInput={(e) => onChangeInput(e, id)}
+            onClickDelete={() => onClickDelete(id)}
+            productNameValue={name}
+            quantityValue={quantity}
+            priceValue={price}
+          />
+        ))}
       </ul>
 
-      <button type="button">추가하기</button>
+      <button className="daily-sales__add" type="button" onClick={onClickAdd}>
+        <div>
+          <IoAddOutline size="100%" />
+        </div>
+      </button>
+      <button
+        className="daily-sales__complete"
+        type="button"
+        onClick={onClickSetSales}
+      >
+        완료하기
+      </button>
     </section>
   );
 }
 
 export default TemplateDailySalesManagement;
+
+interface Props {
+  currDate: string;
+}

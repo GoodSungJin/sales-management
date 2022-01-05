@@ -1,26 +1,22 @@
 import React from 'react';
-import { useNavigate, useRoutes } from 'react-router-dom';
+
+import './Home.scss';
 
 import { fetchCreateFile } from '../../api/spreadSheet';
-import TemplateDailySalesManagement from '../templates/DailySalesManagement';
+
+// @ts-ignore
+import logo from '../../assets/images/logo.png';
 
 function PageHome() {
-  const navigate = useNavigate();
-  function handleSignInClick(event: any) {
-    window.gapi.auth2.getAuthInstance().signIn();
-  }
-
   function handleSignOutClick(event: any) {
     window.gapi.auth2.getAuthInstance().signOut();
   }
   return (
     <>
-      <TemplateDailySalesManagement />
+      <div className="image">
+        <img src={logo} alt="" />
+      </div>
       <div>
-        <button type="button" onClick={handleSignInClick}>
-          sign in
-        </button>
-
         <button type="button" onClick={() => fetchCreateFile('테스트')}>
           create spreadsheet
         </button>

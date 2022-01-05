@@ -1,3 +1,5 @@
+import { Row } from '../utils';
+
 function createFolder(name: string) {
   const fileMetadata = {
     mimeType: 'application/vnd.google-apps.folder',
@@ -23,64 +25,63 @@ export const fetchCreateFile = async (title: string) => {
     properties: {
       title,
     },
+    // developerMetadata: [
+    //   {
+    //     location: {
+    //       spreadsheet: true,
+    //       locationType: 'SPREADSHEET',
+    //     },
+    //     metadataKey: 'questionId',
+    //     metadataValue: '12345',
+    //     visibility: 'DOCUMENT',
+    //     metadataId: 12345,
+    //   },
+    // ],
   });
 
   console.log(res, 'Create File');
 };
 
-export const fetchReadCell = async (
+export const fetchGetSheet = async (
   spreadsheetId: string,
   range: string = '시트1'
 ) => {
+  const filterHeader = (rows: Row[]): Row[] => {
+    const copy = [...rows];
+    copy.shift();
+
+    return copy;
+  };
   const res = await window.gapi.client.sheets.spreadsheets.values.get({
     spreadsheetId,
     range,
   });
 
-  return res.result;
+  return filterHeader(res.result?.values || []);
 };
 
-export const fetchWriteCell = async (spreadsheetID: string, title: string) => {
-  // const values = [
-  //   ['예린', '성진', '금희'],
-  //   ['냠', '메롱', '규돈'],
-  //   ['퉤', '오홋', '와우'],
-  //   // Additional rows ...
-  // ];
-
-  const values = [
-    [
-      '신금희',
-      '새암유통',
-      '12월 02일',
-      '비비고왕교자',
-      '18',
-      '7400',
-      '133,200',
-    ],
-    ['신금희', '새암유통', '12월 02일', '고메피자', '11', '4980', '54,780'],
-    [
-      '신금희',
-      '새암유통',
-      '12월 02일',
-      '비비고수제만두외',
-      '13',
-      '7900',
-      '102,700',
-    ],
-    ['', '', '', '', '', '', '290,680'],
+export const fetchSetSheet = async (
+  spreadsheetID: string,
+  values: string[][]
+) => {
+  const columnTitle = [
+    'MD',
+    '매장명',
+    '날짜',
+    '제품명',
+    '판매수량',
+    '금액',
+    '합계',
   ];
   const body = {
-    values,
+    values: [columnTitle, ...values],
   };
   const res = await window.gapi.client.sheets.spreadsheets.values.update({
     spreadsheetId: spreadsheetID,
-    range: 'A2:G5',
+    range: 'A1:G150',
     valueInputOption: 'RAW',
     resource: body,
   });
-
-  console.log(res, '<<><><><>');
 
   //   .then((response) => {
   //   var result = response.result;

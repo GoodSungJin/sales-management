@@ -17,9 +17,19 @@ function App() {
     });
   }, []);
 
+  function handleSignInClick(event: any) {
+    window.gapi.auth2.getAuthInstance().signIn();
+  }
+
   return (
     <>
-      {isAuthenticated ? router : 'loaded'}
+      {isAuthenticated ? (
+        router
+      ) : (
+        <button type="button" onClick={handleSignInClick}>
+          sign in
+        </button>
+      )}
 
       <TemplateGlobalNavigationBar />
     </>

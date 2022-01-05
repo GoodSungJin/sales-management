@@ -1,91 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchReadCell } from '../../api/spreadSheet';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+
+import './Detail.scss';
+
+import { fetchGetSheet } from '../../api/spreadSheet';
 import TemplateCalendar from '../templates/Calendar';
+import PageDailySaleManagementModal from '../templates/modal/DailySaleManagementModal';
+import { useModal } from '../../hooks/useModal';
+import { monthlySalesData } from '../../recoil';
+import { buildDailySalesByRow } from '../../utils';
 
 function PageDetail() {
   const { id: spreadsheetID } = useParams<'id'>();
 
-  const [currSpreadsheet, setCurrSpreadsheet] = useState<Row[]>([]);
-  const [formattedSales, setFormattedSales] = useState<DailySale[]>();
+  const setSales = useSetRecoilState(monthlySalesData);
+
+  const { isOpen, close, open, isShow, duration } = useModal();
+  const [currDate, setCurrDate] = useState<string>('');
 
   useEffect(() => {
+    const init = async () => {
+      const res = await fetchGetSheet(spreadsheetID || '');
+
+      setSales(buildDailySalesByRow(res));
+    };
+
     init();
   }, [spreadsheetID]);
 
-  useEffect(() => {
-    setFormattedSales(
-      buildDailySales(currSpreadsheet).filter((_, idx) => idx !== 0)
-    );
-    // setFormattedSales(buildDailySales(currSpreadsheet));
-
-    console.log(buildDailySales(currSpreadsheet).filter((_, idx) => idx !== 0));
-  }, [currSpreadsheet]);
-
-  const init = async () => {
-    const res = await fetchReadCell(spreadsheetID || '');
-
-    setCurrSpreadsheet(res.values);
-  };
-
-  const buildDailySales = (values: Row[]) =>
-    values.reduce((accu, curr, currIdx) => {
-      const [userName, store, date, productName, quantity, price, totalPrice] =
-        curr;
-      if (!userName) return accu;
-
-      const prevItem = accu.length - 1 < 0 ? null : accu[accu.length - 1];
-      const product = { name: productName, quantity: +quantity, price: +price };
-
-      if (prevItem?.date === date) {
-        const sameEl = accu.filter(
-          (item, idx, self) => idx !== self.length - 1
-        );
-
-        return [
-          ...sameEl,
-          {
-            ...prevItem,
-            products: [...prevItem.products, product],
-          } as DailySale,
-        ];
-      }
-
-      return [
-        ...accu,
-        {
-          userName,
-          date,
-          store,
-          products: [product],
-        } as DailySale,
-      ];
-    }, [] as DailySale[]);
-
   return (
-    <div>
-      <h1>DETIAL</h1>
-      <TemplateCalendar />
-      {currSpreadsheet.map((item) => (
-        <div>{JSON.stringify(item)}</div>
-      ))}
-    </div>
+    <section className="detail-section">
+      <div className="detail-section__calendar">
+        <div className="detail-section__calendar__title">
+          <h2 className="detail-section__calendar__title__text">12월</h2>
+        </div>
+        <TemplateCalendar
+          onClickDate={(date) => {
+            setCurrDate(
+              `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+            );
+            open();
+          }}
+        />
+      </div>
+
+      <PageDailySaleManagementModal
+        currDate={currDate}
+        onClickClose={close}
+        duration={duration}
+        isOpen={isOpen}
+        isShow={isShow}
+      />
+    </section>
   );
 }
 
 export default PageDetail;
-
-type Row = string[];
-
-interface DailySale {
-  userName: string;
-  date: string;
-  store: string;
-  products: Product[];
-}
-
-interface Product {
-  name: string;
-  quantity: number;
-  price: number;
-}

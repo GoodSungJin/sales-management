@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { AiOutlineCheck } from 'react-icons/ai';
 
 import './Calendar.scss';
+import { monthlySalesData } from '../../recoil';
 
-function TemplateCalendar() {
+function TemplateCalendar({ onClickDate }: Props) {
+  const [sales, setSales] = useRecoilState(monthlySalesData);
+
   const [weeksByDate, setWeeksByDate] = useState<number[][]>([[]]);
   const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
   useEffect(() => {
@@ -39,7 +44,7 @@ function TemplateCalendar() {
   return (
     <table>
       {[DAYS, ...weeksByDate].map((week, idx) => (
-        <tr>
+        <tr key={week.join('')}>
           {week.map((date) => {
             if (!idx)
               return (
@@ -50,10 +55,17 @@ function TemplateCalendar() {
             return (
               <td>
                 {date ? (
-                  <>
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+                  <div
+                    onClick={() => {
+                      onClickDate(new Date(`2022-01-${date}`));
+                    }}
+                  >
                     <h3>{date}</h3>
-                    들어있냐?
-                  </>
+                    {sales.findIndex(
+                      (item) => item.date === `2022-1-${date}`
+                    ) !== -1 && <AiOutlineCheck />}
+                  </div>
                 ) : (
                   ''
                 )}
@@ -67,3 +79,7 @@ function TemplateCalendar() {
 }
 
 export default TemplateCalendar;
+
+interface Props {
+  onClickDate: (date: Date) => void;
+}
