@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/GoodSungJin/sales-management/static/css/main.ce86105c.css",
+    "main.js": "/GoodSungJin/sales-management/static/js/main.aa14200d.js",
+    "static/js/787.0c9ca65d.chunk.js": "/GoodSungJin/sales-management/static/js/787.0c9ca65d.chunk.js",
+    "static/media/logo.png": "/GoodSungJin/sales-management/static/media/logo.9a91b4f96028d6a019ad.png",
+    "index.html": "/GoodSungJin/sales-management/index.html",
+    "main.ce86105c.css.map": "/GoodSungJin/sales-management/static/css/main.ce86105c.css.map",
+    "main.aa14200d.js.map": "/GoodSungJin/sales-management/static/js/main.aa14200d.js.map",
+    "787.0c9ca65d.chunk.js.map": "/GoodSungJin/sales-management/static/js/787.0c9ca65d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ce86105c.css",
+    "static/js/main.aa14200d.js"
+  ]
+}
