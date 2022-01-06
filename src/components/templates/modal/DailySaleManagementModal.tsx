@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 
 import './DailySaleManagementModal.scss';
 
-import TemplateDailySalesManagement from '../DailySalesManagement';
+import TemplateDailySalesManagement, {
+  Props as DailySalesProps,
+} from '../DailySalesManagement';
+import TemplateBaseModal, { Props as BaseModalProps } from './BaseModal';
 
 function TemplateDailySaleManagementModal({
   currDate,
@@ -11,32 +14,20 @@ function TemplateDailySaleManagementModal({
   duration,
   onClickClose,
 }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    ref.current.style.transition = `opacity ${duration}ms`;
-  }, [duration]);
-
-  if (!isOpen) return null;
   return (
-    <div className={`daily-sales-modal ${isShow && 'active'}`} ref={ref}>
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-      <div className="daily-sales-modal__backdrop" onClick={onClickClose} />
+    <TemplateBaseModal
+      duration={duration}
+      isOpen={isOpen}
+      isShow={isShow}
+      onClickClose={onClickClose}
+    >
       <div className="daily-sales-modal__content">
         <TemplateDailySalesManagement currDate={currDate} />
       </div>
-    </div>
+    </TemplateBaseModal>
   );
 }
 
 export default TemplateDailySaleManagementModal;
 
-interface Props {
-  currDate: string;
-  isOpen: boolean;
-  isShow: boolean;
-  duration: number;
-  onClickClose: () => void;
-}
+interface Props extends BaseModalProps, DailySalesProps {}
