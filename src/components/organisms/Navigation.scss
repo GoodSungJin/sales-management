@@ -1,3 +1,5 @@
+@import '~/src/assets/styles/abstracts/variables';
+
 .navigation-list {
   width: 350px;
   height: 100%;
@@ -18,9 +20,9 @@
 
     transform: translateX(10px);
 
-    border: 5px solid #fff;
+    border: 5px solid $white;
     border-radius: 50%;
-    background-color: lightblue;
+    background-color: $cj-orange;
     transition: left 400ms;
 
     &::before {
@@ -35,8 +37,7 @@
       display: block;
 
       border-top-right-radius: 20px;
-      box-shadow: 0 -10px 0 0 #fff;
-      background-color: beige;
+      box-shadow: 0 -10px 0 0 $white;
     }
 
     &::after {
@@ -51,8 +52,7 @@
       display: block;
 
       border-top-left-radius: 20px;
-      box-shadow: 0 -10px 0 0 #fff;
-      background-color: beige;
+      box-shadow: 0 -10px 0 0 $white;
     }
   }
 }
