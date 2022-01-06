@@ -1,4 +1,4 @@
-export interface DailySale {
+export interface DailySales {
   userName: string;
   date: string;
   store: string;

@@ -11,18 +11,19 @@ import './Navigation.scss';
 
 import MoleculeNavigationItem from '../molecules/NavigationItem';
 
+const NAVIGATION_ITEMS = [
+  {
+    title: '리스트',
+    icon: <AiOutlineUnorderedList size="100%" />,
+    link: 'list',
+  },
+  { title: '문자', icon: <AiOutlineMessage size="100%" />, link: '' },
+  { title: '홈', icon: <AiOutlineHome size="100%" />, link: '' },
+  { title: '사용자', icon: <AiOutlineUser size="100%" />, link: '' },
+  { title: '설정', icon: <AiOutlineSetting size="100%" />, link: '' },
+];
+
 function OrganismNavigation() {
-  const NAVIGATION_ITEMS = [
-    {
-      title: '리스트',
-      icon: <AiOutlineUnorderedList size="100%" />,
-      link: 'list',
-    },
-    { title: '문자', icon: <AiOutlineMessage size="100%" />, link: '' },
-    { title: '홈', icon: <AiOutlineHome size="100%" />, link: '' },
-    { title: '사용자', icon: <AiOutlineUser size="100%" />, link: '' },
-    { title: '설정', icon: <AiOutlineSetting size="100%" />, link: '' },
-  ];
   const ref = useRef<HTMLDivElement>(null);
   const [activeItemIdx, setActiveItemIdx] = useState(2);
 

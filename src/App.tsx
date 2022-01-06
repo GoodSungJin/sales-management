@@ -4,8 +4,8 @@ import { useRoutes } from 'react-router-dom';
 import './App.scss';
 
 import { routes } from './Router';
-import { handleClientLoad } from './utils/googleOAuth';
 import TemplateGlobalNavigationBar from './components/templates/GlobalNavigationBar';
+import { handleClientLoad } from './apis/googleClient';
 
 function App() {
   const router = useRoutes(routes);

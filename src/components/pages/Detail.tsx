@@ -4,7 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import './Detail.scss';
 
-import { fetchGetSheet } from '../../api/spreadSheet';
+import { fetchGetSheetValue } from '../../apis/spreadsheet';
 import TemplateCalendar from '../templates/Calendar';
 import PageDailySaleManagementModal from '../templates/modal/DailySaleManagementModal';
 import { useModal } from '../../hooks/useModal';
@@ -17,27 +17,39 @@ function PageDetail() {
   const setSales = useSetRecoilState(monthlySalesData);
 
   const { isOpen, close, open, isShow, duration } = useModal();
-  const [currDate, setCurrDate] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [currDate, setCurrDate] = useState<Date>(new Date());
 
   useEffect(() => {
     const init = async () => {
-      const res = await fetchGetSheet(spreadsheetID || '');
+      const { values, title } = await fetchGetSheetValue(spreadsheetID || '');
 
-      setSales(buildDailySalesByRow(res));
+      setSales(buildDailySalesByRow(values));
+      buildDateBySpreadsheetTitle(title);
     };
 
     init();
   }, [spreadsheetID]);
 
+  const buildDateBySpreadsheetTitle = (title: string) => {
+    const [date] = title.split('_');
+    const newDate = new Date(date);
+
+    setCurrDate(newDate);
+  };
+
   return (
     <section className="detail-section">
       <div className="detail-section__calendar">
         <div className="detail-section__calendar__title">
-          <h2 className="detail-section__calendar__title__text">12월</h2>
+          <h2 className="detail-section__calendar__title__text">
+            {currDate.getFullYear()}년 {currDate.getMonth() + 1}월
+          </h2>
         </div>
         <TemplateCalendar
+          date={currDate}
           onClickDate={(date) => {
-            setCurrDate(
+            setSelectedDate(
               `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
             );
             open();
@@ -46,7 +58,7 @@ function PageDetail() {
       </div>
 
       <PageDailySaleManagementModal
-        currDate={currDate}
+        currDate={selectedDate}
         onClickClose={close}
         duration={duration}
         isOpen={isOpen}

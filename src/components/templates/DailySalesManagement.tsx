@@ -8,12 +8,13 @@ import './DailySalesManagement.scss';
 
 import MoleculeDailySalesInputLabel from '../molecules/DailySalesInputLabel';
 import { monthlySalesData } from '../../recoil';
-import { DailySale, Product } from '../../recoil/type';
-import { fetchSetSheet } from '../../api/spreadSheet';
-import { buildRowsBySales, Row, Rows } from '../../utils';
+import { DailySales, Product } from '../../recoil/type';
+import { fetchSetSheetValue } from '../../apis/spreadsheet';
+import { buildRowsBySales } from '../../utils';
 import SalesListItem from '../organisms/SalesListItem';
+import { Row, Rows } from '../../apis/type';
 
-const INITIAL_STATE: DailySale = {
+const INITIAL_STATE: DailySales = {
   date: '',
   store: '',
   products: [],
@@ -103,7 +104,7 @@ function TemplateDailySalesManagement({ currDate }: Props) {
     });
   };
 
-  const handleSubmitSheet = (monthlySales: DailySale[]) => {
+  const handleSubmitSheet = (monthlySales: DailySales[]) => {
     const sortedMonthlySales = _.sortBy(monthlySales, (o) =>
       new Date(o.date).getTime()
     );
@@ -126,7 +127,7 @@ function TemplateDailySalesManagement({ currDate }: Props) {
       return [...accu, ...productRows, totalPriceRow];
     }, [] as Rows);
 
-    fetchSetSheet(sheetID || '', payload);
+    fetchSetSheetValue(sheetID || '', payload);
   };
 
   return (
@@ -172,6 +173,6 @@ function TemplateDailySalesManagement({ currDate }: Props) {
 
 export default TemplateDailySalesManagement;
 
-interface Props {
+export interface Props {
   currDate: string;
 }

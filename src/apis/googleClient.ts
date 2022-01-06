@@ -1,4 +1,6 @@
-const initClient = async (cb: InitClientCB) => {
+import { InitClientCB } from './type';
+
+const fetchInitClient = async (cb: InitClientCB) => {
   const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
   const CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
@@ -32,11 +34,9 @@ const initClient = async (cb: InitClientCB) => {
 export function handleClientLoad(cb: InitClientCB) {
   window.gapi.load(
     'client:auth2',
-    () => initClient(cb),
+    () => fetchInitClient(cb),
     () => {
       console.log('구글 로드 에러');
     }
   );
 }
-
-type InitClientCB = (isAuthenticated: boolean) => void;

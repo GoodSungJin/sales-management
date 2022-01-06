@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { AiOutlineCheck } from 'react-icons/ai';
 
 import './Calendar.scss';
 import { monthlySalesData } from '../../recoil';
 
-function TemplateCalendar({ onClickDate }: Props) {
-  const [sales, setSales] = useRecoilState(monthlySalesData);
+const WEEK_DAYS = 7;
+const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
+function TemplateCalendar({ onClickDate, date }: Props) {
+  const sales = useRecoilValue(monthlySalesData);
   const [weeksByDate, setWeeksByDate] = useState<number[][]>([[]]);
-  const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
+
   useEffect(() => {
-    const date = new Date();
-    const month = 0;
-
-    const firstDay = new Date(date.getFullYear(), month, 1).getDay();
-    const lastDay = new Date(date.getFullYear(), month + 1, 0).getDay();
-    const lastDate = new Date(date.getFullYear(), month + 1, 0).getDate();
-
-    const WEEK_DAYS = 7;
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+    const lastDay = new Date(
+      date.getFullYear(),
+      date.getMonth() + 1,
+      0
+    ).getDay();
+    const lastDate = new Date(
+      date.getFullYear(),
+      date.getMonth() + 1,
+      0
+    ).getDate();
 
     const emptyDateForFirstDay = Array.from({ length: firstDay }, () => 0);
     const dates = Array.from({ length: lastDate }, (v, k) => k + 1);
@@ -39,31 +44,31 @@ function TemplateCalendar({ onClickDate }: Props) {
     }, [] as number[][]);
 
     setWeeksByDate(weeks);
-  }, []);
+  }, [date]);
 
   return (
     <table>
       {[DAYS, ...weeksByDate].map((week, idx) => (
         <tr key={week.join('')}>
-          {week.map((date) => {
+          {week.map((dateOfWeek) => {
             if (!idx)
               return (
                 <td>
-                  <th>{date}</th>
+                  <th>{dateOfWeek}</th>
                 </td>
               );
             return (
               <td>
-                {date ? (
+                {dateOfWeek ? (
                   // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                   <div
                     onClick={() => {
-                      onClickDate(new Date(`2022-01-${date}`));
+                      onClickDate(new Date(`2022-01-${dateOfWeek}`));
                     }}
                   >
-                    <h3>{date}</h3>
+                    <h3>{dateOfWeek}</h3>
                     {sales.findIndex(
-                      (item) => item.date === `2022-1-${date}`
+                      (item) => item.date === `2022-1-${dateOfWeek}`
                     ) !== -1 && <AiOutlineCheck />}
                   </div>
                 ) : (
@@ -82,4 +87,5 @@ export default TemplateCalendar;
 
 interface Props {
   onClickDate: (date: Date) => void;
+  date: Date;
 }

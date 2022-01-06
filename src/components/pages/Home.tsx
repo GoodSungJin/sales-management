@@ -2,8 +2,6 @@ import React from 'react';
 
 import './Home.scss';
 
-import { fetchCreateFile } from '../../api/spreadSheet';
-
 // @ts-ignore
 import logo from '../../assets/images/logo.png';
 
@@ -12,41 +10,18 @@ function PageHome() {
     window.gapi.auth2.getAuthInstance().signOut();
   }
   return (
-    <>
-      <div className="image">
+    <section className="home">
+      <div className="home__image">
         <img src={logo} alt="" />
       </div>
-      <div>
-        <button type="button" onClick={() => fetchCreateFile('테스트')}>
-          create spreadsheet
-        </button>
+
+      <div className="home__content">
+        <p>
+          어머니 오늘도 고생하셨습니다. <br />
+          조심히 퇴근하시옵소서.
+        </p>
       </div>
-
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-
-          // const res = await fetchWriteCell(
-          //   currSpreadsheetID,
-          //   '이거 들어가냐??'
-          // );
-
-          // console.log(res, 'D<D<D<D<');
-        }}
-      >
-        <fieldset>
-          <legend>물건</legend>
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-          <label>
-            제품명
-            <input type="text" name="name" />
-          </label>
-          <input type="submit" value="Submit" />
-        </fieldset>
-
-        <input type="text" />
-      </form>
-    </>
+    </section>
   );
 }
 

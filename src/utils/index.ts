@@ -1,9 +1,8 @@
-import { DailySale, Product } from '../recoil/type';
+import { DailySales } from '../recoil/type';
+import { Rows } from '../apis/type';
 
-export type Row = string[];
-export type Rows = Row[];
-type FnBuildDailySalesByRow = (v: Row[]) => DailySale[];
-type FnBuildRowsBySales = (s: DailySale) => Rows;
+type FnBuildDailySalesByRow = (v: Rows) => DailySales[];
+type FnBuildRowsBySales = (s: DailySales) => Rows;
 
 export const buildDailySalesByRow: FnBuildDailySalesByRow = (values) =>
   values.reduce(
@@ -39,10 +38,10 @@ export const buildDailySalesByRow: FnBuildDailySalesByRow = (values) =>
           date,
           store,
           products: [product],
-        } as DailySale,
+        } as DailySales,
       ];
     },
-    [] as DailySale[]
+    [] as DailySales[]
   );
 
 export const buildRowsBySales: FnBuildRowsBySales = ({

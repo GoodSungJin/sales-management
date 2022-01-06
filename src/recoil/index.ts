@@ -1,12 +1,12 @@
 import { atom } from 'recoil';
-import { DailySale } from './type';
+import { DailySales } from './type';
 
 export const spreadsheetsState = atom({
   key: 'Atom/SpreadsheetsState',
   default: [],
 });
 
-export const monthlySalesData = atom<DailySale[]>({
+export const monthlySalesData = atom<DailySales[]>({
   key: 'Atom/MonthlySalesData',
   default: [],
 });
