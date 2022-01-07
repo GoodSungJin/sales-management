@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/sales-management/static/css/main.ce86105c.css",
-    "main.js": "/sales-management/static/js/main.5cfc4e02.js",
-    "static/js/787.0c9ca65d.chunk.js": "/sales-management/static/js/787.0c9ca65d.chunk.js",
-    "static/media/logo.png": "/sales-management/static/media/logo.9a91b4f96028d6a019ad.png",
-    "index.html": "/sales-management/index.html",
-    "main.ce86105c.css.map": "/sales-management/static/css/main.ce86105c.css.map",
-    "main.5cfc4e02.js.map": "/sales-management/static/js/main.5cfc4e02.js.map",
-    "787.0c9ca65d.chunk.js.map": "/sales-management/static/js/787.0c9ca65d.chunk.js.map"
+    "main.css": "./static/css/main.ce86105c.css",
+    "main.js": "./static/js/main.e6d8d97e.js",
+    "static/js/787.0c9ca65d.chunk.js": "./static/js/787.0c9ca65d.chunk.js",
+    "static/media/logo.png": "./static/media/logo.9a91b4f96028d6a019ad.png",
+    "index.html": "./index.html",
+    "main.ce86105c.css.map": "./static/css/main.ce86105c.css.map",
+    "main.e6d8d97e.js.map": "./static/js/main.e6d8d97e.js.map",
+    "787.0c9ca65d.chunk.js.map": "./static/js/787.0c9ca65d.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ce86105c.css",
-    "static/js/main.5cfc4e02.js"
+    "static/js/main.e6d8d97e.js"
   ]
 }
