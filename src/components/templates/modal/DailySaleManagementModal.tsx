@@ -22,7 +22,10 @@ function TemplateDailySaleManagementModal({
       onClickClose={onClickClose}
     >
       <div className="daily-sales-modal__content">
-        <TemplateDailySalesManagement currDate={currDate} />
+        <TemplateDailySalesManagement
+          currDate={currDate}
+          onClickComplete={onClickClose}
+        />
       </div>
     </TemplateBaseModal>
   );

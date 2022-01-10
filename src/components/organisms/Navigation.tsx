@@ -4,8 +4,9 @@ import {
   AiOutlineUser,
   AiOutlineUnorderedList,
   AiOutlineSetting,
-  AiOutlineMessage,
+  AiOutlineCalendar,
 } from 'react-icons/ai';
+import { useLocation } from 'react-router-dom';
 
 import './Navigation.scss';
 
@@ -17,16 +18,18 @@ const NAVIGATION_ITEMS = [
     icon: <AiOutlineUnorderedList size="100%" />,
     link: 'list',
   },
-  { title: '문자', icon: <AiOutlineMessage size="100%" />, link: '' },
+  { title: '달력', icon: <AiOutlineCalendar size="100%" />, link: 'calendar' },
   { title: '홈', icon: <AiOutlineHome size="100%" />, link: '' },
-  { title: '사용자', icon: <AiOutlineUser size="100%" />, link: '' },
-  { title: '설정', icon: <AiOutlineSetting size="100%" />, link: '' },
+  { title: '사용자', icon: <AiOutlineUser size="100%" />, link: 'ddddd' },
+  { title: '설정', icon: <AiOutlineSetting size="100%" />, link: 'vvfefeww' },
 ];
 
 function OrganismNavigation() {
   const ref = useRef<HTMLDivElement>(null);
   const [activeItemIdx, setActiveItemIdx] = useState(2);
+  const location = useLocation();
 
+  console.log(location.pathname, 'D<DS<');
   useEffect(() => {
     ref.current!.style.left = `${activeItemIdx * 70}px`;
   }, [activeItemIdx]);
@@ -39,7 +42,7 @@ function OrganismNavigation() {
           linkTo={link}
           icon={icon}
           title={title}
-          isActive={idx === activeItemIdx}
+          isActive={location.pathname.includes(link)}
           onClick={() => {
             setActiveItemIdx(idx);
           }}

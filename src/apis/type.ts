@@ -8,5 +8,11 @@ export type FnFetchGetSheetValue = (
   title: string;
   values: Rows;
 }>;
-
 export type InitClientCB = (isAuthenticated: boolean) => void;
+
+export interface File {
+  kind: string;
+  id: string;
+  name: string;
+  mimeType: string;
+}

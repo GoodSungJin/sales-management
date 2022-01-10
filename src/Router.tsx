@@ -1,9 +1,9 @@
 import React from 'react';
 import type { RouteObject } from 'react-router-dom';
 
-import PageDetail from './components/pages/Detail';
 import PageHome from './components/pages/Home';
 import PageList from './components/pages/List';
+import PageCalendar from './components/pages/Calendar';
 
 export const routes: RouteObject[] = [
   {
@@ -11,11 +11,15 @@ export const routes: RouteObject[] = [
     element: <PageHome />,
   },
   {
+    path: '/calendar',
+    element: <PageCalendar />,
+  },
+  {
     path: '/list',
     element: <PageList />,
   },
   {
     path: '/detail/:id',
-    element: <PageDetail />,
+    element: <PageCalendar />,
   },
 ];

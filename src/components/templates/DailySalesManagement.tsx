@@ -1,27 +1,38 @@
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { IoAddOutline } from 'react-icons/io5';
 import { useRecoilState } from 'recoil';
-import { useParams } from 'react-router-dom';
 import _ from 'lodash';
 
 import './DailySalesManagement.scss';
 
 import MoleculeDailySalesInputLabel from '../molecules/DailySalesInputLabel';
+import OrganismSalesListItem from '../organisms/SalesListItem';
 import { monthlySalesData } from '../../recoil';
 import { DailySales, Product } from '../../recoil/type';
-import { fetchSetSheetValue } from '../../apis/spreadsheet';
-import { buildRowsBySales } from '../../utils';
-import SalesListItem from '../organisms/SalesListItem';
+
+import { buildRowsToSales, buildYearHyphenMonthToDate } from '../../utils';
+
 import { Row, Rows } from '../../apis/type';
+import { useQueryParam } from '../../hooks/useQueryParam';
+import { SPREADSHEET_ID_QUERY_NAME } from '../pages/Calendar';
+import {
+  fetchCreateSpreadsheet,
+  fetchSetSheetValue,
+} from '../../apis/spreadsheet';
 
 const INITIAL_STATE: DailySales = {
-  date: '',
+  date: new Date(),
   store: '',
   products: [],
   userName: '신금희',
 };
-function TemplateDailySalesManagement({ currDate }: Props) {
-  const { id: sheetID } = useParams<'id'>();
+function TemplateDailySalesManagement({
+  currDate,
+  onClickComplete = () => {},
+}: Props) {
+  const [querySpreadsheetID, setQuerySpreadsheetID] = useQueryParam(
+    SPREADSHEET_ID_QUERY_NAME
+  );
 
   const [sales, setSales] = useRecoilState(monthlySalesData);
   const [currSales, setCurrSales] = useState(INITIAL_STATE);
@@ -99,17 +110,18 @@ function TemplateDailySalesManagement({ currDate }: Props) {
         : [...prev, currSales];
 
       handleSubmitSheet(monthlySales);
+      onClickComplete();
 
       return monthlySales;
     });
   };
 
-  const handleSubmitSheet = (monthlySales: DailySales[]) => {
+  const handleSubmitSheet = async (monthlySales: DailySales[]) => {
     const sortedMonthlySales = _.sortBy(monthlySales, (o) =>
       new Date(o.date).getTime()
     );
     const payload = sortedMonthlySales.reduce((accu, dailySales) => {
-      const productRows: Rows = buildRowsBySales(dailySales);
+      const productRows = buildRowsToSales(dailySales);
       const totalPrice = dailySales.products.reduce(
         (priceAccu, { price, quantity }) => priceAccu + price * quantity,
         0
@@ -127,7 +139,14 @@ function TemplateDailySalesManagement({ currDate }: Props) {
       return [...accu, ...productRows, totalPriceRow];
     }, [] as Rows);
 
-    fetchSetSheetValue(sheetID || '', payload);
+    const spreadsheetID =
+      querySpreadsheetID ||
+      (await fetchCreateSpreadsheet(
+        `${buildYearHyphenMonthToDate(currDate)}_매출보고`
+      ));
+    if (!querySpreadsheetID) setQuerySpreadsheetID(spreadsheetID);
+
+    await fetchSetSheetValue(spreadsheetID, payload);
   };
 
   return (
@@ -145,7 +164,7 @@ function TemplateDailySalesManagement({ currDate }: Props) {
       </div>
       <ul className="daily-sales__list">
         {currSales.products.map(({ id, name, quantity, price }) => (
-          <SalesListItem
+          <OrganismSalesListItem
             onChangeInput={(e) => onChangeInput(e, id)}
             onClickDelete={() => onClickDelete(id)}
             productNameValue={name}
@@ -174,5 +193,6 @@ function TemplateDailySalesManagement({ currDate }: Props) {
 export default TemplateDailySalesManagement;
 
 export interface Props {
-  currDate: string;
+  currDate: Date;
+  onClickComplete?: () => void;
 }

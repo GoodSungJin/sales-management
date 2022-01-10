@@ -8,7 +8,9 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <RecoilRoot>
-    <BrowserRouter>
+    <BrowserRouter
+    // basename="/sales-management"
+    >
       <React.StrictMode>
         <App />
       </React.StrictMode>

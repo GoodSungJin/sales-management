@@ -1,10 +1,10 @@
 import { DailySales } from '../recoil/type';
 import { Rows } from '../apis/type';
 
-type FnBuildDailySalesByRow = (v: Rows) => DailySales[];
-type FnBuildRowsBySales = (s: DailySales) => Rows;
+type FnBuildDailySalesToRow = (v: Rows) => DailySales[];
+type FnBuildRowsToSales = (s: DailySales) => Rows;
 
-export const buildDailySalesByRow: FnBuildDailySalesByRow = (values) =>
+export const buildDailySalesToRow: FnBuildDailySalesToRow = (values) =>
   values.reduce(
     (
       accu,
@@ -19,11 +19,11 @@ export const buildDailySalesByRow: FnBuildDailySalesByRow = (values) =>
         price: +price,
       };
       const isIncludedSales =
-        accu.length && accu[accu.length - 1].date === date;
+        +(accu.length && accu[accu.length - 1].date) === +new Date(date);
 
       if (isIncludedSales) {
         return accu.map((item) => {
-          if (item.date === date)
+          if (+item.date === +new Date(date))
             return {
               ...item,
               products: [...item.products, product],
@@ -35,7 +35,7 @@ export const buildDailySalesByRow: FnBuildDailySalesByRow = (values) =>
         ...accu,
         {
           userName,
-          date,
+          date: new Date(date),
           store,
           products: [product],
         } as DailySales,
@@ -44,7 +44,7 @@ export const buildDailySalesByRow: FnBuildDailySalesByRow = (values) =>
     [] as DailySales[]
   );
 
-export const buildRowsBySales: FnBuildRowsBySales = ({
+export const buildRowsToSales: FnBuildRowsToSales = ({
   store,
   products,
   userName,
@@ -53,9 +53,24 @@ export const buildRowsBySales: FnBuildRowsBySales = ({
   products.map(({ price, id, name, quantity }) => [
     userName,
     store,
-    date,
+    `${buildYearHyphenMonthToDate(date)}-${date.getDate()}`,
     name,
     quantity.toString(),
     price.toString(),
     (quantity * price).toLocaleString(),
   ]);
+
+export const getYearMonthDateToDate = (date: Date) => [
+  date.getFullYear(),
+  date.getMonth() + 1,
+  date.getDate(),
+];
+
+export const buildDateToSheetTitle = (title: string) => {
+  const [date] = title.split('_');
+
+  return new Date(date);
+};
+
+export const buildYearHyphenMonthToDate = (date: Date) =>
+  `${date.getFullYear()}-${date.getMonth() + 1}`;

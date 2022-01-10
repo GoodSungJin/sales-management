@@ -8,7 +8,7 @@ export const fetchCreateSpreadsheet = async (title: string) => {
       },
     });
 
-    return res;
+    return res.result;
   } catch (e) {
     console.log(e, 'fetchCreateSpreadsheet');
   }

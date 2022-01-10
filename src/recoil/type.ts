@@ -1,6 +1,6 @@
 export interface DailySales {
   userName: string;
-  date: string;
+  date: Date;
   store: string;
   products: Product[];
 }
