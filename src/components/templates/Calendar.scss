@@ -2,11 +2,12 @@ table {
   margin: 0 auto;
   text-align: center;
 
-  & > tr {
+  & tr {
     display: flex;
     justify-content: center;
 
-    & > td {
+    & th,
+    & td {
       width: 50px;
       height: 50px;
 

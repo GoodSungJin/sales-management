@@ -1,84 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { AiOutlineCheck } from 'react-icons/ai';
 
 import './Calendar.scss';
 import { monthlySalesData } from '../../recoil';
+import useCalendar from '../../hooks/useCalendar';
 
-const WEEK_DAYS = 7;
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 function TemplateCalendar({ onClickDate, date }: Props) {
   const sales = useRecoilValue(monthlySalesData);
-  const [weeksByDate, setWeeksByDate] = useState<number[][]>([[]]);
+  const month = useCalendar(date);
 
-  useEffect(() => {
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-    const lastDay = new Date(
-      date.getFullYear(),
-      date.getMonth() + 1,
-      0
-    ).getDay();
-    const lastDate = new Date(
-      date.getFullYear(),
-      date.getMonth() + 1,
-      0
-    ).getDate();
-
-    const emptyDateForFirstDay = Array.from({ length: firstDay }, () => 0);
-    const dates = Array.from({ length: lastDate }, (v, k) => k + 1);
-    const emptyDateForLastDay = Array.from(
-      { length: WEEK_DAYS - lastDay - 1 },
-      () => 0
-    );
-
-    const weeks = [
-      ...emptyDateForFirstDay,
-      ...dates,
-      ...emptyDateForLastDay,
-    ].reduce((accu, curr, idx) => {
-      if (idx % WEEK_DAYS) accu[accu.length - 1].push(curr);
-      else accu.push([curr]);
-
-      return accu;
-    }, [] as number[][]);
-
-    setWeeksByDate(weeks);
-  }, [date]);
+  const getIncludedDate = (value: Date) =>
+    sales.findIndex((item) => +item.date === +value) !== -1;
 
   return (
     <table>
-      {[DAYS, ...weeksByDate].map((week, idx) => (
-        <tr key={week.join('')}>
-          {week.map((dateOfWeek) => {
-            if (!idx)
-              return (
-                <td>
-                  <th>{dateOfWeek}</th>
-                </td>
-              );
-            return (
-              <td>
-                {dateOfWeek ? (
-                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-                  <div
+      <thead>
+        <tr>
+          {DAYS.map((day) => (
+            <th key={day}>{day}</th>
+          ))}
+        </tr>
+      </thead>
+
+      <tbody>
+        {month.map((weeks) => (
+          <tr key={weeks.join()}>
+            {weeks.map((dateOfWeek) => (
+              <td key={dateOfWeek && +dateOfWeek}>
+                {!!dateOfWeek && (
+                  <button
+                    type="button"
                     onClick={() => {
-                      onClickDate(new Date(`2022-01-${dateOfWeek}`));
+                      onClickDate(dateOfWeek);
                     }}
                   >
-                    <h3>{dateOfWeek}</h3>
-                    {sales.findIndex(
-                      (item) => item.date === `2022-1-${dateOfWeek}`
-                    ) !== -1 && <AiOutlineCheck />}
-                  </div>
-                ) : (
-                  ''
+                    <h3>{dateOfWeek.getDate()}</h3>
+                    {getIncludedDate(dateOfWeek) && <AiOutlineCheck />}
+                  </button>
                 )}
               </td>
-            );
-          })}
-        </tr>
-      ))}
+            ))}
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 }

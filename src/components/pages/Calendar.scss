@@ -18,10 +18,16 @@
       padding: 28px 0;
 
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
+      align-items: center;
 
       &__text {
         font-size: 32px;
+      }
+
+      &__arrow-icon {
+        width: 35px;
+        height: 35px;
       }
     }
   }
