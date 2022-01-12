@@ -25,9 +25,6 @@ const fetchInitClient = async (cb: InitClientCB) => {
 
   cb(window.gapi.auth2.getAuthInstance().isSignedIn.get());
 
-  window.gapi.auth2.getAuthInstance().isSignedIn.listen((a: any) => {
-    console.log(a, 'D<D<');
-  });
   console.log(res, 'init client res');
 };
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { AiOutlineRight, AiOutlineLeft } from 'react-icons/ai';
 
-import './Calendar.scss';
+import '../../assets/styles/components/pages/_calendar.scss';
 
 import { useQueryParam } from '../../hooks/useQueryParam';
 import { useModal } from '../../hooks/useModal';
@@ -18,12 +18,12 @@ import {
 } from '../../utils';
 
 import TemplateCalendar from '../templates/Calendar';
-import PageDailySaleManagementModal from '../templates/modal/DailySaleManagementModal';
+import ModalDailySaleManagement from '../modals/DailySalesManagement';
 
 export const SPREADSHEET_ID_QUERY_NAME = 'spreadsheetID';
 
 function PageCalendar() {
-  const [_, setQuerySpreadsheetID] = useQueryParam(SPREADSHEET_ID_QUERY_NAME);
+  const [, setQuerySpreadsheetID] = useQueryParam(SPREADSHEET_ID_QUERY_NAME);
   const navigate = useNavigate();
   const setSales = useSetRecoilState(monthlySalesData);
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -31,10 +31,9 @@ function PageCalendar() {
   const { isOpen, close, open, isShow, duration } = useModal();
 
   const handleGetSheetValue = async (id: string = '') => {
-    const { values, title } = await fetchGetSheetValue(id);
+    const { values } = await fetchGetSheetValue(id);
 
     setSales(buildDailySalesToRow(values));
-    // getSheetTitleToDate(title);
   };
 
   const onClickDecreaseMonth = () =>
@@ -60,20 +59,6 @@ function PageCalendar() {
         await handleGetSheetValue(spreadsheet.id);
       } else {
         navigate('/calendar', { replace: true });
-
-        /*
-
-        1. 해당 날짜의 파일이 있는지 확인한다.
-          - 있다면, 해당 파일 아이디를 쿼리에 셋하고 시트값을 불러온다.
-          - 없다면, 파일 생성?? 일단 보류??
-        2. 날짜가 변할 때마다 1번을 실행한다.
-
-
-        */
-        // const res = await fetchCreateSpreadsheet(
-        //   `${currDate.getFullYear()}-${currDate.getMonth() + 1}_매출보고`
-        // );
-        // console.log(res, 'SD<D<D<D<');
       }
     };
 
@@ -114,7 +99,7 @@ function PageCalendar() {
       </div>
 
       {selectedDate && (
-        <PageDailySaleManagementModal
+        <ModalDailySaleManagement
           currDate={selectedDate}
           onClickClose={close}
           duration={duration}

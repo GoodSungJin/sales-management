@@ -1,13 +1,13 @@
 import React from 'react';
 
-import './DailySaleManagementModal.scss';
+import '../../assets/styles/components/modals/_daily-sales-management.scss';
 
 import TemplateDailySalesManagement, {
   Props as DailySalesProps,
-} from '../DailySalesManagement';
-import TemplateBaseModal, { Props as BaseModalProps } from './BaseModal';
+} from '../templates/DailySalesManagement';
+import ModalBase, { Props as BaseModalProps } from './Base';
 
-function TemplateDailySaleManagementModal({
+function ModalDailySaleManagement({
   currDate,
   isShow,
   isOpen,
@@ -15,7 +15,7 @@ function TemplateDailySaleManagementModal({
   onClickClose,
 }: Props) {
   return (
-    <TemplateBaseModal
+    <ModalBase
       duration={duration}
       isOpen={isOpen}
       isShow={isShow}
@@ -27,10 +27,10 @@ function TemplateDailySaleManagementModal({
           onClickComplete={onClickClose}
         />
       </div>
-    </TemplateBaseModal>
+    </ModalBase>
   );
 }
 
-export default TemplateDailySaleManagementModal;
+export default ModalDailySaleManagement;
 
 interface Props extends BaseModalProps, DailySalesProps {}

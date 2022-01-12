@@ -1,11 +1,11 @@
 import React, { ChangeEvent, MouseEvent } from 'react';
 import { BsTrash } from 'react-icons/bs';
 
-import './SalesListItem.scss';
+import '../../assets/styles/components/organisms/_sales-management-item.scss';
 
 import MoleculeDailySalesInputLabel from '../molecules/DailySalesInputLabel';
 
-function OrganismSalesListItem({
+function OrganismSalesManagementItem({
   productNameValue,
   quantityValue,
   priceValue,
@@ -56,7 +56,7 @@ function OrganismSalesListItem({
   );
 }
 
-export default OrganismSalesListItem;
+export default OrganismSalesManagementItem;
 
 type FnOnChangeInput = (e: ChangeEvent<HTMLInputElement>) => void;
 type FnOnClickDelete = (e: MouseEvent<HTMLDivElement>) => void;

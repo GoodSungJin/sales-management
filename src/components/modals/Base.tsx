@@ -1,8 +1,8 @@
 import React, { ReactNode, useEffect, useRef } from 'react';
 
-import './BaseModal.scss';
+import '../../assets/styles/components/modals/_base-modal.scss';
 
-function TemplateBaseModal({
+function ModalBase({
   children,
   isShow,
   isOpen,
@@ -12,22 +12,27 @@ function TemplateBaseModal({
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!ref.current) return;
-
-    ref.current.style.transition = `opacity ${duration}ms`;
-  }, [duration]);
+    ref.current!.style.transition = `opacity ${duration}ms`;
+  }, [ref.current, duration]);
 
   if (!isOpen) return null;
   return (
     <div className={`base-modal ${isShow && 'active'}`} ref={ref}>
-      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-      <div className="base-modal__backdrop" onClick={onClickClose} />
+      <div
+        className="base-modal__backdrop"
+        onClick={onClickClose}
+        tabIndex={-1}
+        role="dialog"
+        aria-labelledby="close"
+        aria-hidden
+      />
+
       <div className="base-modal__content">{children}</div>
     </div>
   );
 }
 
-export default TemplateBaseModal;
+export default ModalBase;
 
 export interface Props {
   children?: ReactNode;

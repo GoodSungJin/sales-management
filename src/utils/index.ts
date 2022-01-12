@@ -18,12 +18,14 @@ export const buildDailySalesToRow: FnBuildDailySalesToRow = (values) =>
         quantity: +quantity,
         price: +price,
       };
+      const [yy, mm, dd] = date.split('-');
+      const newDate = new Date(+yy, +mm - 1, +dd);
       const isIncludedSales =
-        +(accu.length && accu[accu.length - 1].date) === +new Date(date);
+        +(accu.length && accu[accu.length - 1].date) === +newDate;
 
       if (isIncludedSales) {
         return accu.map((item) => {
-          if (+item.date === +new Date(date))
+          if (+item.date === +newDate)
             return {
               ...item,
               products: [...item.products, product],
@@ -35,10 +37,10 @@ export const buildDailySalesToRow: FnBuildDailySalesToRow = (values) =>
         ...accu,
         {
           userName,
-          date: new Date(date),
+          date: newDate,
           store,
           products: [product],
-        } as DailySales,
+        },
       ];
     },
     [] as DailySales[]

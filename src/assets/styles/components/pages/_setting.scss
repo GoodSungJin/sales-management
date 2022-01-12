@@ -1,0 +1,48 @@
+@import '../../abstracts/variables';
+
+.setting {
+  padding-top: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__image {
+    width: 150px;
+    height: 150px;
+
+    margin-bottom: 80px;
+
+    border-radius: 50%;
+    background-color: gainsboro;
+    overflow: hidden;
+  }
+
+  &__info {
+    width: 100%;
+
+    padding: 0 18px;
+
+    display: flex;
+    flex-direction: column;
+
+    &__title {
+      font-size: 18px;
+
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+
+      border-bottom: 1px solid $cj-blue;
+
+      color: $cj-blue;
+    }
+
+    &__list {
+      padding: 0 4px;
+
+      &__item {
+        font-size: 14px;
+        color: dimgray;
+      }
+    }
+  }
+}

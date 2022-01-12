@@ -2,7 +2,8 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { AiOutlineCheck } from 'react-icons/ai';
 
-import './Calendar.scss';
+import '../../assets/styles/components/templates/_calendar.scss';
+
 import { monthlySalesData } from '../../recoil';
 import useCalendar from '../../hooks/useCalendar';
 

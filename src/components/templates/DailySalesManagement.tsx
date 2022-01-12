@@ -3,10 +3,10 @@ import { IoAddOutline } from 'react-icons/io5';
 import { useRecoilState } from 'recoil';
 import _ from 'lodash';
 
-import './DailySalesManagement.scss';
+import '../../assets/styles/components/templates/_daily-sales-management.scss';
 
 import MoleculeDailySalesInputLabel from '../molecules/DailySalesInputLabel';
-import OrganismSalesListItem from '../organisms/SalesListItem';
+import OrganismSalesManagementItem from '../organisms/SalesManagementItem';
 import { monthlySalesData } from '../../recoil';
 import { DailySales, Product } from '../../recoil/type';
 
@@ -38,7 +38,7 @@ function TemplateDailySalesManagement({
   const [currSales, setCurrSales] = useState(INITIAL_STATE);
 
   useEffect(() => {
-    const includedSales = sales.find((item) => item.date === currDate);
+    const includedSales = sales.find((item) => +item.date === +currDate);
 
     setCurrSales(
       includedSales || {
@@ -110,10 +110,10 @@ function TemplateDailySalesManagement({
         : [...prev, currSales];
 
       handleSubmitSheet(monthlySales);
-      onClickComplete();
 
       return monthlySales;
     });
+    onClickCopySalesToKakaoString(currSales);
   };
 
   const handleSubmitSheet = async (monthlySales: DailySales[]) => {
@@ -149,6 +149,25 @@ function TemplateDailySalesManagement({
     await fetchSetSheetValue(spreadsheetID, payload);
   };
 
+  const onClickCopySalesToKakaoString = ({
+    store,
+    date,
+    products,
+  }: DailySales) => {
+    const title = `${date.getMonth() + 1}월${date.getDate()}일 매출보고
+매  장  명 : ${store}`;
+    const product = products.map(
+      (item, idx) => `${idx ? '■ 서브제품' : '▶️ 메인행사'} : ${item.name}
+  판매수량 :  ${item.price}×${item.quantity}
+  판매금액 :  ${(item.price * item.quantity).toLocaleString()}`
+    );
+    const footer = `총합산금액:  ${products
+      .reduce((accu, curr) => accu + curr.quantity * curr.price, 0)
+      .toLocaleString()}원`;
+
+    navigator.clipboard.writeText([title, ...product, footer].join('\n\n'));
+  };
+
   return (
     <section className="daily-sales">
       <div className="daily-sales__store-name">
@@ -164,7 +183,7 @@ function TemplateDailySalesManagement({
       </div>
       <ul className="daily-sales__list">
         {currSales.products.map(({ id, name, quantity, price }) => (
-          <OrganismSalesListItem
+          <OrganismSalesManagementItem
             onChangeInput={(e) => onChangeInput(e, id)}
             onClickDelete={() => onClickDelete(id)}
             productNameValue={name}

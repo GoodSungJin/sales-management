@@ -1,12 +1,7 @@
-import React, {
-  ChangeEvent,
-  CSSProperties,
-  HTMLInputTypeAttribute,
-  ReactNode,
-} from 'react';
-
-import './DailySalesInputLabel.scss';
+import React, { ChangeEvent, HTMLInputTypeAttribute, ReactNode } from 'react';
 import * as CSS from 'csstype';
+
+import '../../assets/styles/components/molecules/_daily-sales-input-label.scss';
 
 function MoleculeDailySalesInputLabel({
   children,

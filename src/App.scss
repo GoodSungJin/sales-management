@@ -1,1 +1,48 @@
 @import './assets/styles/main';
+@import 'assets/styles/abstracts/variables';
+
+.main {
+  width: 100%;
+  height: 100%;
+
+  &__sign-in {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+
+    background-color: $cj-blue;
+
+    &__content {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+
+      &__title {
+        font-size: 26px;
+        margin-top: 18px;
+
+        color: $key-color;
+      }
+
+      &__icon {
+        width: 100px;
+        height: 100px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-color: $white;
+        border: 5px solid $cj-red;
+        border-radius: 50%;
+        overflow: hidden;
+
+        color: $cj-orange;
+      }
+    }
+  }
+}

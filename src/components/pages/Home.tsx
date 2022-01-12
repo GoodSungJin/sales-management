@@ -1,14 +1,11 @@
 import React from 'react';
 
-import './Home.scss';
+import '../../assets/styles/components/pages/_home.scss';
 
 // @ts-ignore
 import logo from '../../assets/images/logo.png';
 
 function PageHome() {
-  function handleSignOutClick(event: any) {
-    window.gapi.auth2.getAuthInstance().signOut();
-  }
   return (
     <section className="home">
       <div className="home__image">

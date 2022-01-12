@@ -1,7 +1,7 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 
-import './NavigationItem.scss';
+import '../../assets/styles/components/molecules/_navigation-item.scss';
 
 function MoleculeNavigationItem({
   isActive,
@@ -29,7 +29,7 @@ export default MoleculeNavigationItem;
 interface Props {
   isActive: boolean;
   linkTo: string;
-  onClick: () => void;
   title: string;
   icon: ReactNode;
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
 }
