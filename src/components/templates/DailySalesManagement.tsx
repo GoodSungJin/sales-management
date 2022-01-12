@@ -141,12 +141,15 @@ function TemplateDailySalesManagement({
 
     const spreadsheetID =
       querySpreadsheetID ||
-      (await fetchCreateSpreadsheet(
-        `${buildYearHyphenMonthToDate(currDate)}_매출보고`
-      ));
+      (
+        await fetchCreateSpreadsheet(
+          `${buildYearHyphenMonthToDate(currDate)}_매출보고`
+        )
+      ).spreadsheetId;
     if (!querySpreadsheetID) setQuerySpreadsheetID(spreadsheetID);
 
     await fetchSetSheetValue(spreadsheetID, payload);
+    onClickComplete();
   };
 
   const onClickCopySalesToKakaoString = ({
