@@ -13,6 +13,7 @@ function ModalBase({
 
   useEffect(() => {
     ref.current!.style.transition = `opacity ${duration}ms`;
+    // eslint-disable-next-line
   }, [ref.current, duration]);
 
   if (!isOpen) return null;

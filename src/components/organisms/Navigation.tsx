@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 
 import '../../assets/styles/components/organisms/_navigation.scss';
 
@@ -23,7 +23,7 @@ function OrganismNavigation({ navigations }: Props) {
 
   return (
     <ul className="navigation-list" ref={listRef}>
-      {navigations.map(({ icon, name, path }, idx) => (
+      {navigations.map(({ icon, name, path }) => (
         <div data-path={path}>
           <MoleculeNavigationItem
             key={name}

@@ -8,6 +8,7 @@ export const fetchGetSpreadsheet: () => Promise<File[]> = async () => {
 
     return res.result.files;
   } catch (e) {
+    // eslint-disable-next-line
     console.log(e, 'fetchGetSpreadsheet');
   }
 };

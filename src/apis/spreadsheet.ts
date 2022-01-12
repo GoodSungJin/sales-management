@@ -1,4 +1,4 @@
-import { FnFetchGetSheetValue, Row, Rows } from './type';
+import { FnFetchGetSheetValue, Rows } from './type';
 
 export const fetchCreateSpreadsheet = async (title: string) => {
   try {
@@ -10,6 +10,7 @@ export const fetchCreateSpreadsheet = async (title: string) => {
 
     return res.result;
   } catch (e) {
+    // eslint-disable-next-line
     console.log(e, 'fetchCreateSpreadsheet');
   }
 };
@@ -37,6 +38,7 @@ export const fetchGetSheetValue: FnFetchGetSheetValue = async (
       values: filterHeader(valueRes.result?.values || []),
     };
   } catch (e) {
+    // eslint-disable-next-line
     console.log(e, 'fetchGetSheetValue');
 
     return {
@@ -54,6 +56,7 @@ const fetchGetSpreadsheet = async (spreadsheetId: string) => {
 
     return res.result;
   } catch (e) {
+    // eslint-disable-next-line
     console.log(e, 'fetchGetSpreadsheet');
   }
 };
@@ -68,57 +71,56 @@ export const fetchSetSheetValue = async (
   };
 
   try {
-    const res = await window.gapi.client.sheets.spreadsheets.values.update({
+    return await window.gapi.client.sheets.spreadsheets.values.update({
       spreadsheetId: spreadsheetID,
       range: 'A1:G150',
       valueInputOption: 'RAW',
       resource,
     });
-
-    return res;
   } catch (e) {
+    // eslint-disable-next-line
     console.log(e, 'fetchSetSheetValue');
   }
 };
 
-const getFolderIdByName = () => {
-  const fileMetadata = {
-    name: '테스트',
-    mimeType: 'application/vnd.google-apps.folder',
-  };
+// const getFolderIdByName = () => {
+//   const fileMetadata = {
+//     name: '테스트',
+//     mimeType: 'application/vnd.google-apps.folder',
+//   };
+//
+//   window.gapi.client.drive.files
+//     .list({
+//       q: "mimeType='application/vnd.google-apps.folder' and name = '테스트'",
+//     })
+//     .then((response: any) => {
+//       const folderID = response.result.files[0].id;
+//       window.gapi.client.drive.files
+//         .list({
+//           q: "mimeType='application/vnd.google-apps.folder' and name = '테스트'",
+//         })
+//         .then((res: any) => {
+//           console.log(res);
+//         });
+//     });
+// };
 
-  window.gapi.client.drive.files
-    .list({
-      q: "mimeType='application/vnd.google-apps.folder' and name = '테스트'",
-    })
-    .then((response: any) => {
-      const folderID = response.result.files[0].id;
-      window.gapi.client.drive.files
-        .list({
-          q: "mimeType='application/vnd.google-apps.folder' and name = '테스트'",
-        })
-        .then((res: any) => {
-          console.log(res);
-        });
-    });
-};
-
-function createFolder(name: string) {
-  const fileMetadata = {
-    mimeType: 'application/vnd.google-apps.folder',
-  };
-  const requestBody = {
-    name: '테스트',
-
-    q: "mimeType='application/vnd.google-apps.folder' and name = '테스트'",
-  };
-
-  window.gapi.client.drive.files
-    .create({
-      resource: fileMetadata,
-      fields: 'id',
-    })
-    .then((resp: any) => {
-      console.log('Folder Id: ', resp.id);
-    });
-}
+// function createFolder(name: string) {
+//   const fileMetadata = {
+//     mimeType: 'application/vnd.google-apps.folder',
+//   };
+//   const requestBody = {
+//     name: '테스트',
+//
+//     q: "mimeType='application/vnd.google-apps.folder' and name = '테스트'",
+//   };
+//
+//   window.gapi.client.drive.files
+//     .create({
+//       resource: fileMetadata,
+//       fields: 'id',
+//     })
+//     .then((resp: any) => {
+//       console.log('Folder Id: ', resp.id);
+//     });
+// }

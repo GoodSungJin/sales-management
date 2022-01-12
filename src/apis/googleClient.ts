@@ -25,6 +25,7 @@ const fetchInitClient = async (cb: InitClientCB) => {
 
   cb(window.gapi.auth2.getAuthInstance().isSignedIn.get());
 
+  // eslint-disable-next-line no-console
   console.log(res, 'init client res');
 };
 
@@ -33,6 +34,7 @@ export function handleClientLoad(cb: InitClientCB) {
     'client:auth2',
     () => fetchInitClient(cb),
     () => {
+      // eslint-disable-next-line no-console
       console.log('구글 로드 에러');
     }
   );

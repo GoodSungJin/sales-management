@@ -63,6 +63,7 @@ function PageCalendar() {
     };
 
     init();
+    // eslint-disable-next-line
   }, [currDate]);
 
   return (
