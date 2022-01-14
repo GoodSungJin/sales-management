@@ -6,10 +6,11 @@ import '../../assets/styles/components/templates/_calendar.scss';
 
 import { monthlySalesData } from '../../recoil';
 import useCalendar from '../../hooks/useCalendar';
+import AtomLoadingIcon from '../atoms/LoadingIcon';
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-function TemplateCalendar({ onClickDate, date }: Props) {
+function TemplateCalendar({ onClickDate, date, isLoaded }: Props) {
   const sales = useRecoilValue(monthlySalesData);
   const month = useCalendar(date);
 
@@ -47,6 +48,13 @@ function TemplateCalendar({ onClickDate, date }: Props) {
           </tr>
         ))}
       </tbody>
+      {!isLoaded && (
+        <div>
+          <div>
+            <AtomLoadingIcon />
+          </div>
+        </div>
+      )}
     </table>
   );
 }
@@ -56,4 +64,5 @@ export default TemplateCalendar;
 interface Props {
   onClickDate: (date: Date) => void;
   date: Date;
+  isLoaded: boolean;
 }

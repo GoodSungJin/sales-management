@@ -1,7 +1,8 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import { IoAddOutline } from 'react-icons/io5';
 import { useRecoilState } from 'recoil';
 import _ from 'lodash';
+import ReactLoading from 'react-loading';
 
 import '../../assets/styles/components/templates/_daily-sales-management.scss';
 
@@ -19,6 +20,8 @@ import {
   fetchCreateSpreadsheet,
   fetchSetSheetValue,
 } from '../../apis/spreadsheet';
+import ModalNotification from '../modals/Notification';
+import { useModal } from '../../hooks/useModal';
 
 const INITIAL_STATE: DailySales = {
   date: new Date(),
@@ -30,12 +33,15 @@ function TemplateDailySalesManagement({
   currDate,
   onClickComplete = () => {},
 }: Props) {
+  const { isOpen, close, open, isShow, duration } = useModal();
   const [querySpreadsheetID, setQuerySpreadsheetID] = useQueryParam(
     SPREADSHEET_ID_QUERY_NAME
   );
 
   const [sales, setSales] = useRecoilState(monthlySalesData);
   const [currSales, setCurrSales] = useState(INITIAL_STATE);
+  const [fetchIsLoaded, setFetchIsLoaded] = useState(true);
+  const [notification, setNotification] = useState<ReactNode>();
 
   useEffect(() => {
     const includedSales = sales.find((item) => +item.date === +currDate);
@@ -109,14 +115,27 @@ function TemplateDailySalesManagement({
           })
         : [...prev, currSales];
 
-      handleSubmitSheet(monthlySales);
+      if (currSales.products.length && currSales.store) {
+        handleSubmitSheet(monthlySales);
 
-      return monthlySales;
+        return monthlySales;
+      }
+
+      setNotification(<>상품 또는 매장명을 확인해주세요.</>);
+      open();
+
+      setTimeout(() => {
+        close();
+      }, 1000);
+      return prev;
     });
+
     onClickCopySalesToKakaoString(currSales);
   };
 
   const handleSubmitSheet = async (monthlySales: DailySales[]) => {
+    setFetchIsLoaded(false);
+
     const sortedMonthlySales = _.sortBy(monthlySales, (o) =>
       new Date(o.date).getTime()
     );
@@ -149,7 +168,19 @@ function TemplateDailySalesManagement({
     if (!querySpreadsheetID) setQuerySpreadsheetID(spreadsheetID);
 
     await fetchSetSheetValue(spreadsheetID, payload);
-    onClickComplete();
+    setNotification(
+      <>
+        매출 복사 완료! <br />
+        카톡으로 넘어가서 붙혀넣기 하면 돼요 :)
+      </>
+    );
+    open();
+
+    setTimeout(() => {
+      setFetchIsLoaded(true);
+
+      onClickComplete();
+    }, 1500);
   };
 
   const onClickCopySalesToKakaoString = ({
@@ -172,43 +203,58 @@ function TemplateDailySalesManagement({
   };
 
   return (
-    <section className="daily-sales">
-      <div className="daily-sales__store-name">
-        <MoleculeDailySalesInputLabel
-          onChange={onChangeStoreName}
-          type="text"
-          value={currSales.store}
-          placeholder="매장명을 입력해주세요."
-          name="name"
-        >
-          매장명
-        </MoleculeDailySalesInputLabel>
-      </div>
-      <ul className="daily-sales__list">
-        {currSales.products.map(({ id, name, quantity, price }) => (
-          <OrganismSalesManagementItem
-            onChangeInput={(e) => onChangeInput(e, id)}
-            onClickDelete={() => onClickDelete(id)}
-            productNameValue={name}
-            quantityValue={quantity}
-            priceValue={price}
-          />
-        ))}
-      </ul>
-
-      <button className="daily-sales__add" type="button" onClick={onClickAdd}>
-        <div>
-          <IoAddOutline size="100%" />
+    <>
+      <section className="daily-sales">
+        <div className="daily-sales__store-name">
+          <MoleculeDailySalesInputLabel
+            onChange={onChangeStoreName}
+            type="text"
+            value={currSales.store}
+            placeholder="매장명을 입력해주세요."
+            name="name"
+          >
+            매장명
+          </MoleculeDailySalesInputLabel>
         </div>
-      </button>
-      <button
-        className="daily-sales__complete"
-        type="button"
-        onClick={onClickSetSales}
+        <ul className="daily-sales__list">
+          {currSales.products.map(({ id, name, quantity, price }) => (
+            <OrganismSalesManagementItem
+              onChangeInput={(e) => onChangeInput(e, id)}
+              onClickDelete={() => onClickDelete(id)}
+              productNameValue={name}
+              quantityValue={quantity}
+              priceValue={price}
+            />
+          ))}
+        </ul>
+
+        <button className="daily-sales__add" type="button" onClick={onClickAdd}>
+          <div>
+            <IoAddOutline size="100%" />
+          </div>
+        </button>
+        <button
+          className="daily-sales__complete"
+          type="button"
+          onClick={onClickSetSales}
+        >
+          {fetchIsLoaded ? (
+            '완료하기'
+          ) : (
+            <ReactLoading type="spinningBubbles" width="50px" height="50px" />
+          )}
+        </button>
+      </section>
+
+      <ModalNotification
+        onClickClose={close}
+        isShow={isShow}
+        isOpen={isOpen}
+        duration={duration}
       >
-        완료하기
-      </button>
-    </section>
+        {notification}
+      </ModalNotification>
+    </>
   );
 }
 

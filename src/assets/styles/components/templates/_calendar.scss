@@ -1,5 +1,8 @@
 table {
   margin: 0 auto;
+
+  position: relative;
+
   text-align: center;
 
   & tr {
@@ -14,6 +17,27 @@ table {
       display: flex;
       align-items: flex-start;
       justify-content: center;
+    }
+  }
+
+  & > div {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #000;
+    opacity: 0.4;
+
+    & > div {
+      width: 100px;
+      height: 100px;
     }
   }
 }

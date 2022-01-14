@@ -30,19 +30,24 @@ function PageCalendar() {
   const [currDate, setCurrDate] = useState<Date>(new Date());
   const { isOpen, close, open, isShow, duration } = useModal();
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const handleGetSheetValue = async (id: string = '') => {
     const { values } = await fetchGetSheetValue(id);
 
     setSales(buildDailySalesToRow(values));
   };
 
-  const onClickDecreaseMonth = () =>
+  const onClickDecreaseMonth = () => {
     setCurrDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1));
-  const onClickIncreaseMonth = () =>
+  };
+  const onClickIncreaseMonth = () => {
     setCurrDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1));
+  };
 
   useEffect(() => {
     const init = async () => {
+      setIsLoaded(false);
       const files = await fetchGetSpreadsheet();
       const spreadsheet = files.find((item) => {
         const fileDate = buildDateToSheetTitle(item.name);
@@ -60,6 +65,8 @@ function PageCalendar() {
       } else {
         navigate('/calendar', { replace: true });
       }
+
+      setIsLoaded(true);
     };
 
     init();
@@ -90,6 +97,7 @@ function PageCalendar() {
         </div>
 
         <TemplateCalendar
+          isLoaded={isLoaded}
           date={currDate}
           onClickDate={(date) => {
             setSelectedDate(date);
