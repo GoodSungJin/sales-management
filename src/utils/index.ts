@@ -27,9 +27,11 @@ export const buildSalesToKakaoString = ({
   판매수량 :  ${item.price}×${item.quantity}
   판매금액 :  ${(item.price * item.quantity).toLocaleString()}`
   );
-  const footer = `총합산금액:  ${products
+  const totalPrice = products
     .reduce((accu, curr) => accu + curr.quantity * curr.price, 0)
-    .toLocaleString()}원`;
+    .toLocaleString();
+  const price = `총합산금액:  ${totalPrice}원`;
+  const footer = `퇴근시간:  7시퇴근합니다`;
 
-  return [header, ...body, footer].join('\n\n');
+  return [header, ...body, price, footer].join('\n\n');
 };

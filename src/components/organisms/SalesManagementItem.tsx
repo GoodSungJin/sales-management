@@ -26,7 +26,7 @@ function OrganismSalesManagementItem({
         <div className="sales-list-item__input-group__bottom">
           <div className="sales-list-item__input-group__bottom__input">
             <MoleculeDailySalesInputLabel
-              register={priceRegister}
+              register={quantityRegister}
               type="number"
             >
               수량
@@ -34,8 +34,8 @@ function OrganismSalesManagementItem({
           </div>
           <div className="sales-list-item__input-group__bottom__input">
             <MoleculeDailySalesInputLabel
+              register={priceRegister}
               type="number"
-              register={quantityRegister}
             >
               가격
             </MoleculeDailySalesInputLabel>

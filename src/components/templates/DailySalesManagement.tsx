@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { IoAddOutline } from 'react-icons/io5';
 
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import _ from 'lodash';
 import ReactLoading from 'react-loading';
 import { useFieldArray, useForm } from 'react-hook-form';
@@ -34,7 +34,7 @@ function TemplateDailySalesManagement({
   currDate,
   onClickComplete = () => {},
 }: Props) {
-  const sales = useRecoilValue(monthlySalesData);
+  const [sales, setSales] = useRecoilState(monthlySalesData);
   const [fetchIsLoaded, setFetchIsLoaded] = useState(true);
   const [message, setMessage] = useState<ReactNode>();
 
@@ -83,17 +83,20 @@ function TemplateDailySalesManagement({
       return setError('store', {
         message: '상품을 등록해주세요.',
       });
+
     const isIncluded =
-      sales.findIndex((item) => item.date === data.date) !== -1;
+      sales.findIndex((o) => o.date.getTime() === data.date.getTime()) !== -1;
+    const mergedSales = isIncluded
+      ? _.uniqBy([data, ...sales], ({ date }) => date.getTime())
+      : [...sales, data];
 
     setFetchIsLoaded(false);
 
     await fetchSetSheetValue(
       await getSpreadsheetID(),
-      buildSpreadsheetValue(
-        isIncluded ? _.concat(sales, data) : [...sales, data]
-      )
+      buildSpreadsheetValue(mergedSales)
     );
+    setSales(mergedSales);
 
     copyText(buildSalesToKakaoString(data));
 
@@ -205,7 +208,7 @@ function TemplateDailySalesManagement({
           {fields.map((field, idx) => (
             <OrganismSalesManagementItem
               key={field.id}
-              onClickDelete={() => onClickDeleteProduct(field.itemID)}
+              onClickDelete={() => onClickDeleteProduct(idx)}
               nameRegister={register(`products.${idx}.name`, {
                 required: '제품명을 입력해주세요.',
               })}

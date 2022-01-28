@@ -58,7 +58,7 @@ export const buildRowsToSales: FnBuildRowsToSales = ({
     store,
     `${buildYearHyphenMonthToDate(date)}-${date.getDate()}`,
     name,
-    quantity.toString(),
-    price.toString(),
+    quantity.toLocaleString(),
+    price.toLocaleString(),
     (quantity * price).toLocaleString(),
   ]);
