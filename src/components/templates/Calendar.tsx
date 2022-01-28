@@ -48,13 +48,17 @@ function TemplateCalendar({ onClickDate, date, isLoaded }: Props) {
           </tr>
         ))}
       </tbody>
-      {!isLoaded && (
-        <div>
+
+      {
+        // Todo: suspense 사용해서 상태 없이 만들기
+        !isLoaded && (
           <div>
-            <AtomLoadingIcon />
+            <div>
+              <AtomLoadingIcon />
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
     </table>
   );
 }

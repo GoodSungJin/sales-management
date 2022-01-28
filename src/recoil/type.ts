@@ -6,7 +6,7 @@ export interface DailySales {
 }
 
 export interface Product {
-  id: number;
+  itemID: number;
   name: string;
   quantity: number;
   price: number;

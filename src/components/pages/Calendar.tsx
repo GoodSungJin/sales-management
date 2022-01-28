@@ -11,14 +11,11 @@ import { useModal } from '../../hooks/useModal';
 import { fetchGetSheetValue } from '../../apis/spreadsheet';
 import { fetchGetSpreadsheet } from '../../apis/googleDrive';
 import { monthlySalesData } from '../../recoil';
-import {
-  buildDailySalesToRow,
-  buildDateToSheetTitle,
-  buildYearHyphenMonthToDate,
-} from '../../utils';
+import { buildDateToSheetTitle, buildYearHyphenMonthToDate } from '../../utils';
 
 import TemplateCalendar from '../templates/Calendar';
 import ModalDailySaleManagement from '../modals/DailySalesManagement';
+import { buildDailySalesToRow } from '../../utils/product';
 
 export const SPREADSHEET_ID_QUERY_NAME = 'spreadsheetID';
 
