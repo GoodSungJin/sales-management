@@ -1,4 +1,4 @@
-import React, { ChangeEvent, MouseEvent } from 'react';
+import React, { MouseEvent } from 'react';
 import { BsTrash } from 'react-icons/bs';
 import { UseFormRegisterReturn } from 'react-hook-form/dist/types/form';
 

@@ -66,6 +66,7 @@ function TemplateDailySalesManagement({
   useEffect(() => {
     const includedSales = sales.find((item) => +item.date === +currDate);
 
+    setValue('date', currDate);
     setValue('store', includedSales?.store || '');
     setValue('products', includedSales?.products || []);
   }, [currDate, sales, setValue]);
@@ -174,6 +175,7 @@ function TemplateDailySalesManagement({
       close();
       clearErrors();
     }, 1500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Object.keys(errors).join('')]);
 
   return (
